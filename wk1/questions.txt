@@ -1,0 +1,89 @@
+COMP(2041|9044) Tutorial 1 - 29/05/2024
+
+1. 
+    What is your tutor's name and e-mail?
+        Bill Nguyen | bill.nguyen<at>unsw.edu.au
+    
+    How long have they been at UNSW?
+        2 years
+
+    What are they studying?
+        Bachelor of Computer Science
+    
+    Do they have a pet?
+        No
+
+    What is 1 interesting thing about them?
+        I'm an aviation nerd :)
+
+2. What is an operating system?
+    An operating system is a piece of software that manages the hardware of a computer and provides an interface to the programs that run on the computer.
+
+    This means that user level programs do not need to know the details of the hardware.
+    They use code that interfaces with the operating system (syscalls).
+    And the operating system handles the details of the hardware.
+
+    This means that user level programs can be written once and run on many different computers.
+
+3. What OS do CSE lab computers run?
+    A flavour of Linux
+
+4. What is a filter program? What is a regular expression (regex)?
+    Filters:
+        - Filter is a program that transforms a byte stream
+        - Reads bytes from their standard input or specified files, then perform useful transformation on the stream, and write the transformed bytes to standard output or specified files
+        - Examples: `cat`, `grep`, `wc`, `tr`, `head`/`tail`, `cut`, `sort`, `uniq`, `sed`, `find`, `join`, `paste`, `tee`, and `xargs`
+
+    Grep:
+        A program that prints lines from its input that match a given regex.
+        Useful flags:
+        - `-E` matches full POSIX regex. Always use it.
+        - `-i` ignores upper/lower case `grep -i 'h' file.txt`
+        - `-v` displays lines that do not match the pattern `grep -v 'h' file.txt`. Invert the match.
+
+    Regular expressions:
+        Concise powerful notation for *matching* a set of strings.
+        Unless a character has a special meaning, it matches itself `a` matches `a`.
+
+        a*     Matches zero or more repetition of 'a': '', 'a', 'aa', 'aaa', ...
+        a+     Matches one or more repetition of 'a': 'a', 'aa', 'aaa', ...
+        a?     Matches zero or one 'a'
+        a|b    Matches 'a' or 'b'
+        ()     Grouping: (a*|b|c+)
+        a{n}   Matches n repetitions of 'a'. a{5} matches only 'aaaaa'
+
+        a{n,m} Matches n to m repetitions of a
+        p{n,}  Matches n or more repetitions of a
+        p{,m}  Matches m or less repetitions of a
+
+
+5. Write a regex to match:
+    C preprocessor commands in a C program source file.
+
+    All the lines in a C program except preprocessor commands.
+
+    All lines in a C program with trailing white space (one or more white space at the end of line).
+
+    The names "Barry", "Harry", "Larry" and "Parry".
+
+    A string containing the word "hello" followed, some time later, by the word "world".
+
+    The word "calendar" and mis-spellings where 'a' is replaced with 'e' or vice-versa.
+
+    A list of positive integers separated by commas, e.g. 2,4,8,16,32
+
+    A C string whose last character is newline.
+
+
+6. You are in the COMP2041 final exam and you forgot some grep options, where can you access the documentation?
+
+
+7. Why does this command seem to be taking a long time to run: `grep -E hello`
+
+
+8. Why won't this command work: `grep -E int main program.c`
+
+
+9. This regular expression [0-9]*.[0-9]* is intended to match floating point numbers such as '42.5'. Is it appropriate?
+
+
