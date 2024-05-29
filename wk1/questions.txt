@@ -52,38 +52,60 @@ COMP(2041|9044) Tutorial 1 - 29/05/2024
         ()     Grouping: (a*|b|c+)
         a{n}   Matches n repetitions of 'a'. a{5} matches only 'aaaaa'
 
+        ^a     Forces a to match at the beginning of a line
+        a$     Forces a to match at the end of a line
+
+        [ab]   Matches a or b
+        [^a]   Matches anything except a
+
         a{n,m} Matches n to m repetitions of a
         p{n,}  Matches n or more repetitions of a
         p{,m}  Matches m or less repetitions of a
 
+        \s     Matches any whitespace characters
+	\d     Matches any digits. Equivalent to [0-9]
+        .      Matches any character
 
 5. Write a regex to match:
     C preprocessor commands in a C program source file.
+        '^#'
 
     All the lines in a C program except preprocessor commands.
+        '^[^#]'
 
     All lines in a C program with trailing white space (one or more white space at the end of line).
+        '\s+$'
 
     The names "Barry", "Harry", "Larry" and "Parry".
+        '^[BHLP]arry$'
 
     A string containing the word "hello" followed, some time later, by the word "world".
+        'hello.*world'
 
     The word "calendar" and mis-spellings where 'a' is replaced with 'e' or vice-versa.
+        'c[ae]l[ae]nd[ae]r'
 
     A list of positive integers separated by commas, e.g. 2,4,8,16,32
+        ([0-9])|([1-9][0-9]*)(,([0-9])|([1-9][0-9]*))*
 
     A C string whose last character is newline.
+        '"[^"]*\\n"'
 
 
 6. You are in the COMP2041 final exam and you forgot some grep options, where can you access the documentation?
-
+       man grep
 
 7. Why does this command seem to be taking a long time to run: `grep -E hello`
-
+       Because by default, grep (and other filter programs) wait for input from standard input (which is the terminal).
 
 8. Why won't this command work: `grep -E int main program.c`
+       Because the space is a special character in shell that separate the argumnets into a program. So in this problem, it is saying "find 'int' in the file main and program.c", which is not what we want. We want to find 'int main' in the file program.c
 
+       To solve this, we put our regex in quotation which make it one argument: `grep -E "int main" program.c`
 
 9. This regular expression [0-9]*.[0-9]* is intended to match floating point numbers such as '42.5'. Is it appropriate?
 
+   	Nope, for example, it matches "comp.2041", to fix this, we use a better regexp that only matches numbers:
+
+	([0-9]|[1-9][0-9]+)(,([0-9]|[1-9][0-9]+))*
 
