@@ -1,0 +1,127 @@
+1. Naive: `sort -k2 <telephone.txt`
+
+Output:
+J A Shepherd   Botany       9665-4321  ***
+R Buckland     Randwick     9663-9876
+G Heiser       Newtown      9381-1234
+S Jha          Kingsford    9621-1234
+M Pagnucco     North Ryde   9868-6789
+C Sammut       Randwick     9663-1234
+A Taylor       Glebe        9692-1234
+
+*** Not correct, the A is a middle name, we want sort to count "Shepard" not "A"
+
+Answer: we need to re-arrange the data to ensure the last name always appear in the same column.
+
+Solution #1: Make the last name the first column
+Shepherd J A   Botany       9665-4321
+Buckland R     Randwick     9663-9876
+Heiser G       Newtown      9381-1234
+Jha S          Kingsford    9621-1234
+Pagnucco M     North Ryde   9868-6789
+Sammut C       Randwick     9663-1234
+Taylor A       Glebe        9692-1234
+
+Solution #2: Make the First name and Middle name form a single column
+J.A Shepherd   Botany       9665-4321
+R Buckland     Randwick     9663-9876
+G Heiser       Newtown      9381-1234
+S Jha          Kingsford    9621-1234
+M Pagnucco     North Ryde   9868-6789
+C Sammut       Randwick     9663-1234
+A Taylor       Glebe        9692-1234
+
+------------
+
+2. 
+a. `head -3 <passwords.txt` OR `head -3 passwords.txt`
+   First solution: terminal take content of the file and put it in head's stdin.
+   Second solution: we give the filename to head then it reads the file by itself.
+
+b. `grep -E '^(cs|se|bi|en)[0-9]{4}'` <passwords.txt
+   Intuition: we know that the username is always at the start of the string so we anchor our regex to match at the start with ^
+
+c. `grep -E '/bin/bash$'` <passwords.txt
+   Intuition: similar to previous, we observe that the shell is always at the end of the string, so anchor the regex to match at the end $
+
+d. `cut -d':' -f1,2 <passwords.txt | tr ':' '\t' >tabbed_passwords.txt`
+   Idea: first we just want to isolate the username and password with cut, then after we get what we need, just convert the colon to a tab.
+
+------------
+
+3.
+tr -cs 'a-zA-Z0-9' '\n' < sentences.txt
+
+-c means complement, that is, invert the match.
+-s means 'squeeze repeated characters', that is, for everything that matches, remove the duplicates
+
+In plain English, this command means: "Replace anything that cannot form a word with a newline."
+
+------------
+
+4.
+a. 2, because `tr -d ' '` will join all the words together in each line:
+    thisisbigBigBIG
+    butthisisnotsobig
+   Then `wc -w` will count word, which is 2.
+
+b. 10, because `tr -cs '[:alpha:]' '\n'` will convert split the words into separate lines:
+    this
+    is
+    big
+    Big
+    BIG
+    but
+    this
+    is
+    not
+    so
+    big
+
+   Then `wc -l` count the number of lines.
+
+c. This splits the input up so there is one word of input on each line of output;
+    then normalises them (by mapping all words to all upper-case),
+    then counts the number of occurrences of each distinct word.
+
+------------
+
+(This is not important)
+
+5.
+a. No, they need to be sorted by a common key (in this case, zID).
+sort -t'|' -k1,1 comp1511-marks.psv > comp1511-marks-sorted.psv
+sort -t'|' -k1,1 comp2041-marks.psv > comp2041-marks-sorted.psv
+
+b. Assuming that the files are sorted into comp1511-marks-sorted.psv and comp2041-marks-sorted.psv:
+join -t'|' comp1511-marks-sorted.psv comp2041-marks-sorted.psv
+
+c. Assuming that the files are sorted into comp1511-marks-sorted.psv and comp2041-marks-sorted.psv:
+join -t'|' -a1 -a2 -o auto -e'--' comp1511-marks-sorted.psv comp2041-marks-sorted.psv
+The -o auto option is required in this case so that join can calculate how many fields are required.
+
+d. Assuming that the files are sorted into comp1511-marks-sorted.psv and comp2041-marks-sorted.psv:
+join -t'|' comp1511-marks-sorted.psv comp2041-marks-sorted.psv | sort -t'|' -k2,2 -k3,3r
+
+------------
+
+Hint - sort syntax:
+`sort -xa.b,yc.d` - sort the ath character of column x to the bth character of column x. Then sort by cth character of column y to the dth character of column y.
+
+6. 
+a. `sort -k3,3n -k2,2n <benchmarks.txt`
+
+b. `sort -k4n -k1.8,1n <benchmarks.txt` 
+   Breakdown: -k1.8,1 means sort by the 8th character of the first column to the end of the first column.
+
+c. Solution 1: `sed -E 's/\t0/\t/g' <benchmarks.txt`
+    "s/\t0/\t/" means replace every instance of "tab then zero" with just "tab". Then the g at end means apply this replacement on the line infinitely until we run out of things to match.
+   
+   Solution 2 (better): `sed -E 's/(\s)0/\1/g' <benchmarks.txt`
+    Similar idea to solution 1, but we use '\s' to match *any* whitespace character then a zero, we put it in bracket which allow is to back-reference it in the replacement string '\1'.
+    This solution can match any spaces and tabs, whereas solution 1 can only match a tab.
+
+d. `sed -E '/^program2/,/^program13/d' <benchmarks.txt`
+
+Bonus:
+`sed -E -n '/^program2/,/^program13/p' <benchmarks.txt` will print only program2 to program13
