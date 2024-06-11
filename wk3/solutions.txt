@@ -1,0 +1,262 @@
+Note 1: $ means a command is being executed on the terminal. Similar to the terminal you use on the CSE machine.
+
+Note 2: The shell performs command and variable substitution before splitting the command line into separate words to make up the arguments.
+        Single-quotes and double-quotes perform a grouping function that overrides the normal word-splitting.
+
+1.
+Assume that we are in a shell where the following shell variable assignments have been performed:
+$ x=2
+$ y='Y Y'
+$ z=ls
+
+And ls gives the following result (meaning we have 3 files called a, b and c):
+$ ls
+a b c
+
+What will be displayed as a result of the following echo commands:
+
+    a. $ echo a   b   c
+       a b c
+    
+    Explanation: Spaces between arguments are not preserved; `echo` puts one space between each argument.
+
+    b. $ echo "a   b   c"
+       a   b   c
+    
+    Explanation: Spaces *are* preserved, because the quotes turn "a   b   c" into a single argument to echo.
+    
+    c. $ echo $y
+       Y Y
+    
+    Explanation: $y expands into two separate arguments.
+
+    d. $ echo x$x
+       x2
+    
+    Explanation: $x expands to 2 and is appended after the letter x.
+
+    e. $ echo $xx
+
+
+    Explanation: $xx is treated as a reference to the shell variable xx: 
+                 since there is no such variable, it expands to the empty string.
+
+    f. $ echo ${x}x
+       2x
+
+    Explanation: ${x} expands to 2 and the letter x is appended.
+
+    g. $ echo "$y"
+       Y Y
+
+    Explanation: $y expands into a single argument.
+
+    h. $ echo '$y'
+       $y
+    
+    Explanation: Single quotes prevent variable expansion.
+
+    i. $ echo $($y)
+       Y: command not found
+
+    Explanation: $y expands to Y Y
+                 which is then executed as a command because of the $();
+                 since there is no command Y, an error message follows.
+
+    j. $ echo $($z)
+       a b c
+    
+    Explanation: $z expands to ls,
+                 which is then executed as a command,
+                 giving the names of the files in the current directory,
+                 which are treated as three separate arguments.
+
+    k. $ echo $(echo a b c)
+       a b c
+    
+    Explanation: The inner echo command is executed, giving a b c, 
+                 which are passed as arguments to the outer echo.
+
+
+------------------------------
+
+
+2. The program q2.c aim to give precise information about their command-line arguments.
+
+Assume that the program is compiled in such a way that we may invoke them as ./args.
+Consider the following examples of how it operates:
+
+$ ./args a b c
+#args = 3
+arg[1] = "a"
+arg[2] = "b"
+arg[3] = "c"
+$ ./args "Hello there"
+#args = 1
+arg[1] = "Hello there"
+
+Assume that we are in a shell where the following shell variable assignments have been performed:
+$ x=2
+$ y='Y Y'
+$ z=ls
+
+And we are in the `q2` folder.
+
+What will be the output of the following:
+
+a. $ ./args x y   z
+#args = 3
+arg[1] = "x"
+arg[2] = "y"
+arg[3] = "z"
+
+Explanation: Each of the letters is a single argument (separated by spaces).
+
+
+b. $ ./args $(ls)
+#args = 6
+arg[1] = "a"
+arg[2] = "args"
+arg[3] = "b"
+arg[4] = "c"
+arg[5] = "q2.c"
+arg[6] = "q2.py"
+
+Explanation: The ls command is executed and its output is interpolated into the command line;
+             the shell then splits the command-line into arguments.
+
+
+c. $ ./args $y
+#args = 2
+arg[1] = "Y"
+arg[2] = "Y"
+
+Explanation: $y expands to the string Y Y;
+             when the shell splits the line into words,
+             these two characters becomes separate arguments.
+
+
+d. $ ./args "$y"
+#args = 1
+arg[1] = "Y Y"
+
+Explanation: $y expands to Y Y within the quotes, so it is treated as a single word when the shell breaks the line into arguments.
+
+
+e. $ ./args $(echo $y)
+#args = 2
+arg[1] = "Y"
+arg[2] = "Y"
+
+Explanation: The command within the backquotes expands to Y Y, but since backquotes don't have a grouping function,
+             the two Y's are treated as separate arguments.
+Tutor's note: show student $ ./args "$(echo $y)"
+
+
+f. $ ./args $x$x$x
+#args = 1
+arg[1] = "222"
+
+Explanation: $x expands into 2, which is concatenated with itself three times
+
+
+g. $ ./args $x$y
+#args = 2
+arg[1] = "2Y"
+arg[2] = "Y"
+
+Explanation: $x expands to 2 and
+            $y expands to Y Y;
+            these two strings are concatenated to give 2Y Y and,
+            when the shell splits the line into words,
+            the second Y becomes an argument in its own right.
+
+
+h. $ ./args $xy
+#args = 0
+
+Explanation: There is no variable called xy,
+            so $xy expands to the empty string,
+            which vanishes when the shell splits the command line into words.
+
+
+------------------------------
+
+
+3. Imagine that we have just typed a shell script into the file my_first_shell_script.sh in the q3 directory.
+We then attempt to execute the script and observe the following:
+
+$ my_first_shell_script.sh
+my_first_shell_script.sh: command not found
+
+Explain the possible causes for this, and describe how to rectify them.
+
+Answers:
+Problem:
+you might not have the current directory in your $PATH.
+Solution:
+either add . to the end of your $PATH (via PATH=$PATH:.),
+or type the command name as ./my_first_shell_script.sh
+
+Problem:
+the my_first_shell_script.sh file may not be executable.
+Solution:
+either make the file executable, by running (e.g.,) chmod +x my_first_shell_script.sh,
+or execute it via the command sh my_first_shell_script.sh (also fixes the first problem)
+
+Problem:
+you might have gotten the #!/bin/sh line wrong.
+Solution:
+check the first line of the script,
+to make sure there are no spurious spaces or spelling mistakes,
+and then check that the shell is called /bin/sh on your system
+
+Problem:
+the my_first_shell_script.sh file has been transferred from a Windows-based computer in binary mode,
+and there is a carriage-return character,
+which is often rendered as ^M (or '\r' in C) after /bin/sh.
+Solution:
+Run the command dos2unix my_first_shell_script.sh,
+which will remove the pesky ^Ms.
+
+Note that some of these problems might result in a message like:
+my_first_shell_script.sh: Permission denied,
+depending on which shell you're using.
+
+
+------------------------------
+
+
+4. see q4/seq_solution.sh
+
+Tutor's note: show student how to check whether the given string is a number
+
+
+------------------------------
+
+
+5. To be explored in lab
+
+
+------------------------------
+
+
+6. see q6/no_blinking_solution.sh
+
+
+------------------------------
+
+
+7. see q7/no_blinking_solution.sh
+
+
+------------------------------
+
+
+8. (Prioritise) see q8/list_include_files_solution.sh
+
+
+------------------------------
+
+
+9.
