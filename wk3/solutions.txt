@@ -259,4 +259,9 @@ Tutor's note: show student how to check whether the given string is a number
 ------------------------------
 
 
-9.
+9. 10. 11. More of the same...skip.
+
+
+------------------------------
+
+12.
