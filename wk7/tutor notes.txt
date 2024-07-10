@@ -1,0 +1,48 @@
+This week's tutoring is focused on an intotroduction to python and regular expressions in python.
+Make sure students know how to run a python program.
+Make sure students know how to import the re module and use the regex functions.
+
+Q1. Use the `#!/usr/bin/env python3` hashbang for python. Demo `python3` hashbang doesn't work.
+    Demo `which python3` trick.
+
+Q2. CSE uses Python 3.9, show student 3.9 specific documentations: https://docs.python.org/3.9/
+
+Q3. Demo help expression
+
+Q4. Demo python3 interpreter executing line by line.
+
+Q5. live coding.
+Talk about weak-typing compared to C and type inference.
+Talk about importance of indentations. 
+Demo list-slicing notation.
+Demo optional `end` argument to print.
+Demo the content of sys.argv
+
+Q6. live coding.
+Demo string formatting and string concatenation
+Demo file open, read and close
+Demo try except
+
+Q7. live coding. less important.
+
+Q8. more live coding... compute ascii value with ord() and reconstruct char from ascii number with chr()
+
+Q9. 
+
+Q10. import re
+Q11. 
+search is the most like the grep command.
+search will find a match anywhere in the string.
+
+match will only find a match at the beginning of the string.
+It is the same as using search with the ^ anchor.
+
+fullmatch will only find a match at both the beginning and at the end of the string.
+It is the same as using search with both the ^ and $ anchors.
+
+A match object has a number of useful attributes:
+Match.span() - the starting and ending index of the match
+Match.re.pattern - the regex pattern
+Match.string - the original string
+Match.group(0) - the match
+Match.group(N) - capture groups
